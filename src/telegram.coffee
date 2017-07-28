@@ -46,5 +46,9 @@ export class Telegram extends EventEmitter
           # A text message: not a reply
           console.log "[Telegram] Message #{u.message.message_id} from #{u.message.from.username}"
           @emit "msg_#{u.message.chat.id}", u.message.from.username, u.message.text
+        if u.message.text? and u.message.reply_to_message?
+          # A text message: a reply
+          console.log "[Telegram] Message #{u.message.message_id} from #{u.message.from.username} replying to #{u.message.reply_to_message.from.username}"
+          @emit "msg_#{u.message.chat.id}", u.message.from.username, u.message.reply_to_message.from.username + ": " + u.message.text
     if offset? # It might be possible that we got no message
       @offset = offset + 1
