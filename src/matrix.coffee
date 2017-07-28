@@ -44,6 +44,7 @@ export class Matrix extends EventEmitter
       # We will expose the alias for outgoing events
       @roomMap[room_id] = r
     @listen()
+    return null
 
   listen: =>
     while true
@@ -67,10 +68,10 @@ export class Matrix extends EventEmitter
       # Ignore the first sync event
       # If we forward these, chances are that there might be duplicated messages
       {next_batch} = await request options
-      @next_batch = next_batch
+      @next_batch = next_batch if next_batch? # It might be possible that we got no message
       return
     {next_batch, rooms} = await request options
-    @next_batch = next_batch
+    @next_batch = next_batch if next_batch? # It might be possible that we got no message
     for k, v of rooms.join
       alias = @roomMap[k]
       continue if !alias? # Only accept routed rooms.
