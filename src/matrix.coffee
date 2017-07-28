@@ -5,19 +5,7 @@ export class Matrix extends EventEmitter
   constructor: (@baseURL, @username, @password) ->
     super()
     @roomMap = {}
-    @userMap = {}
     @next_batch = null
-
-  getDisplayName: (uid) =>
-    options =
-      method: 'GET'
-      uri: "#{@baseURL}/client/r0/profile/#{encodeURIComponent uid}/displayname"
-      json: yes
-      qs:
-        access_token: @access_token
-    {displayname} = await request options
-    @userMap[uid] = displayname
-    return displayname
 
   start: (rooms) =>
     # Login
@@ -77,11 +65,7 @@ export class Matrix extends EventEmitter
       continue if !alias? # Only accept routed rooms.
       for ev in v.timeline.events
         #console.log ev
-        sender = ev.sender
-        if @userMap[sender]?
-          sender = @userMap[sender] # A cache. TODO: Clear it for some interval
-        else
-          sender = await @getDisplayName sender
+        sender = ev.sender.split(':')[0].replace '@', ''
         if ev.type is 'm.room.message'
           if ev.content.msgtype is 'm.text'
             console.log "[Matrix] Text message #{ev.event_id} from #{sender}"
