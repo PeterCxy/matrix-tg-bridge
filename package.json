@@ -4,7 +4,7 @@
   "description": "Matrix to Telegram bridge",
   "main": "index.js",
   "scripts": {
-    "start": "node lib/main.js"
+    "start": "node index.js"
   },
   "repository": "https://github.com/PeterCxy/matrix-tg-bridge",
   "author": "PeterCxy",

@@ -1,0 +1,16 @@
+{
+  "matrix": {
+    "server": "https://example.com",
+    "username": "username",
+    "password": "password"
+  },
+  "telegram": {
+    "token": "YOUR_TOKEN"
+  },
+  "route": [
+    {
+      "matrix": "#test:example.com",
+      "telegram": "GROUP_NUMBER_ID"
+    }
+  ]
+}
