@@ -1,0 +1,7 @@
+node_modules
+lib
+yarn.lock
+config.json
+data/*
+data/**/*
+!data/README.md
