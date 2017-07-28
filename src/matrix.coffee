@@ -78,6 +78,7 @@ export class Matrix extends EventEmitter
       for ev in v.timeline.events
         #console.log ev
         sender = ev.sender.split(':')[0].replace '@', ''
+        continue if sender is @username # Matrix does not filter our own messages by default
         if ev.type is 'm.room.message'
           if ev.content.msgtype is 'm.text'
             console.log "[Matrix] Text message #{ev.event_id} from #{sender}"
