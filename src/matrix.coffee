@@ -5,7 +5,18 @@ export class Matrix extends EventEmitter
   constructor: (@baseURL, @username, @password) ->
     super()
     @roomMap = {}
+    @roomMapR = {}
     @next_batch = null
+
+  sendMessage: (room, text) =>
+    options =
+      method: 'POST'
+      uri: "#{@baseURL}/client/r0/rooms/#{encodeURIComponent @roomMapR[room]}/send/m.room.message?access_token=#{@access_token}",
+      json: yes
+      body:
+        msgtype: 'm.text'
+        body: text
+    return await request options
 
   start: (rooms) =>
     # Login
@@ -31,6 +42,7 @@ export class Matrix extends EventEmitter
       # Build a map between ID and alias
       # We will expose the alias for outgoing events
       @roomMap[room_id] = r
+      @roomMapR[r] = room_id
     @listen()
     return null
 

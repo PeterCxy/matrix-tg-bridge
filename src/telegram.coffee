@@ -7,6 +7,16 @@ export class Telegram extends EventEmitter
     @baseURL = "https://api.telegram.org/bot#{token}"
     @offset = null
 
+  sendMessage: (chat, text) =>
+    options =
+      uri: "#{@baseURL}/sendMessage"
+      method: 'POST'
+      json: yes
+      body:
+        chat_id: chat
+        text: text
+    return await request options
+
   listen: =>
     while true
       try
