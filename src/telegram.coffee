@@ -82,5 +82,12 @@ export class Telegram extends EventEmitter
           path = await @downloadFile 'pictures', id, 'jpg'
           console.log "[Telegram] Photo downloaded to #{path}"
           @emit "img_#{u.message.chat.id}", u.message.from.username, data_domain + path.replace 'data/', ''
+        if u.message.sticker?
+          # A sticker message
+          id = u.message.sticker.file_id
+          console.log "[Telegram] Sticker #{id} from #{u.message.from.username}"
+          path = await @downloadFile 'stickers', id, 'webp'
+          console.log "[Telegram] Sticker downloaded to #{path}"
+          @emit "img_#{u.message.chat.id}", u.message.from.username, data_domain + path.replace 'data/', ''
     if offset? # It might be possible that we got no message
       @offset = offset + 1
