@@ -36,6 +36,11 @@ main = ->
         await matrix.sendMessage k.matrix, formatMsg user, msg
       catch err
         console.log err
+    telegram.on "img_#{k.telegram}", (user, img) ->
+      try
+        await matrix.sendMessage k.matrix, formatImg user, img
+      catch err
+        console.log err
 
 formatMsg = (user, msg) -> "[#{user}] #{msg}"
 formatImg = (user, img) -> "[#{user}] <image> #{img}"

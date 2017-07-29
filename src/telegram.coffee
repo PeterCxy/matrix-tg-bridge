@@ -1,10 +1,15 @@
 import { EventEmitter } from "events"
 import request from "request-promise"
+import { promisify } from "util"
+import { exists, createWriteStream } from "fs"
+{data_domain} = require '../config.json'
+existsAsync = promisify exists
 
 export class Telegram extends EventEmitter
   constructor: (token, @chats) ->
     super()
     @baseURL = "https://api.telegram.org/bot#{token}"
+    @fileURL = "https://api.telegram.org/file/bot#{token}/"
     @offset = null
 
   sendMessage: (chat, text) =>
@@ -16,6 +21,26 @@ export class Telegram extends EventEmitter
         chat_id: chat
         text: text
     return await request options
+
+  downloadFile: (type, id, suffix) =>
+    path = "./data/#{type}/#{id}.#{suffix}"
+    if await existsAsync path
+      return path.replace './', ''
+    options =
+      uri: "#{@baseURL}/getFile"
+      method: 'GET'
+      json: yes
+      qs:
+        file_id: id
+    {result} = await request options
+    url = @fileURL + result.file_path
+    return new Promise (resolve, reject) ->
+      reader = request(url)
+      stream = reader.pipe(createWriteStream(path))
+      reader.on 'end', ->
+        resolve path.replace './', ''
+      reader.on 'error', (err) ->
+        reject err
 
   listen: =>
     while true
@@ -50,5 +75,12 @@ export class Telegram extends EventEmitter
           # A text message: a reply
           console.log "[Telegram] Message #{u.message.message_id} from #{u.message.from.username} replying to #{u.message.reply_to_message.from.username}"
           @emit "msg_#{u.message.chat.id}", u.message.from.username, u.message.reply_to_message.from.username + ": " + u.message.text
+        if u.message.photo?
+          # A photo message
+          id = u.message.photo[u.message.photo.length - 1].file_id
+          console.log "[Telegram] Photo #{id} from #{u.message.from.username}"
+          path = await @downloadFile 'pictures', id, 'jpg'
+          console.log "[Telegram] Photo downloaded to #{path}"
+          @emit "img_#{u.message.chat.id}", u.message.from.username, data_domain + path.replace 'data/', ''
     if offset? # It might be possible that we got no message
       @offset = offset + 1

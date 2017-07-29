@@ -5,3 +5,4 @@ config.json
 data/*
 data/**/*
 !data/README.md
+!data/**/README.md
