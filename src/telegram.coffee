@@ -75,6 +75,7 @@ export class Telegram extends EventEmitter
           # A text message: a reply
           console.log "[Telegram] Message #{u.message.message_id} from #{u.message.from.username} replying to #{u.message.reply_to_message.from.username}"
           @emit "msg_#{u.message.chat.id}", u.message.from.username, u.message.reply_to_message.from.username + ": " + u.message.text
+          # TODO: If replying to a forwarded message, use the original username instead of the bot.
         if u.message.photo?
           # A photo message
           id = u.message.photo[u.message.photo.length - 1].file_id
