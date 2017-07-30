@@ -3,6 +3,10 @@ lib
 yarn.lock
 config.json
 data/*
-data/**/*
+!data/pictures
+!data/stickers
 !data/README.md
-!data/**/README.md
+data/pictures/*
+!data/pictures/README.md
+data/stickers/*
+!data/stickers/README.md
