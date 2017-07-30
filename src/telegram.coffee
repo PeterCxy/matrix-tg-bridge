@@ -6,7 +6,7 @@ import { exists, createWriteStream } from "fs"
 existsAsync = promisify exists
 
 export class Telegram extends EventEmitter
-  constructor: (token, @chats) ->
+  constructor: (token, @botName, @chats) ->
     super()
     @baseURL = "https://api.telegram.org/bot#{token}"
     @fileURL = "https://api.telegram.org/file/bot#{token}/"
@@ -74,8 +74,10 @@ export class Telegram extends EventEmitter
         if u.message.text? and u.message.reply_to_message?
           # A text message: a reply
           console.log "[Telegram] Message #{u.message.message_id} from #{u.message.from.username} replying to #{u.message.reply_to_message.from.username}"
-          @emit "msg_#{u.message.chat.id}", u.message.from.username, u.message.reply_to_message.from.username + ": " + u.message.text
-          # TODO: If replying to a forwarded message, use the original username instead of the bot.
+          name = u.message.reply_to_message.from.username
+          if name is @botName and u.message.reply_to_message.text?
+            name = u.message.reply_to_message.text.split(']')[0].replace('[', '')
+          @emit "msg_#{u.message.chat.id}", u.message.from.username, name + ": " + u.message.text
         if u.message.photo?
           # A photo message
           id = u.message.photo[u.message.photo.length - 1].file_id

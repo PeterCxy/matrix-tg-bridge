@@ -5,7 +5,8 @@
     "password": "password"
   },
   "telegram": {
-    "token": "YOUR_TOKEN"
+    "token": "YOUR_TOKEN",
+    "username": "SomeBot"
   },
   "data_domain": "https://example.com/data/",
   "route": [

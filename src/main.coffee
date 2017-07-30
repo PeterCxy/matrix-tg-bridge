@@ -13,7 +13,7 @@ main = ->
     tgChats.push parseInt k.telegram
 
   matrix = new Matrix config.matrix.server + "/_matrix", config.matrix.username, config.matrix.password
-  telegram = new Telegram config.telegram.token, tgChats
+  telegram = new Telegram config.telegram.token,  config.telegram.username, tgChats
 
   # Start listeners
   await matrix.start matrixRooms
