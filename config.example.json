@@ -1,6 +1,7 @@
 {
   "matrix": {
     "server": "https://example.com",
+    "server_url": "https://example.com",
     "username": "username",
     "password": "password"
   },

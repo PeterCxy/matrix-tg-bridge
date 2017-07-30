@@ -1,5 +1,6 @@
 import { EventEmitter } from "events"
 import request from "request-promise"
+config = require '../config.json'
 
 export class Matrix extends EventEmitter
   constructor: (@baseURL, @username, @password) ->
@@ -85,6 +86,6 @@ export class Matrix extends EventEmitter
             @emit "msg_#{alias}", sender, ev.content.body
           if ev.content.msgtype is 'm.image'
             console.log "[Matrix] Image message #{ev.event_id} from #{sender}"
-            url = "#{@baseURL}/media/r0/download/#{ev.content.url.replace 'mxc://', ''}"
+            url = "#{@baseURL.replace config.matrix.server, config.matrix.server_url}/media/r0/download/#{ev.content.url.replace 'mxc://', ''}"
             console.log "[Matrix] Image URL #{url}"
             @emit "img_#{alias}", sender, url
