@@ -2,8 +2,10 @@ import { EventEmitter } from "events"
 import request from "request-promise"
 import { promisify } from "util"
 import { exists, createWriteStream } from "fs"
+import { exec } from "child_process"
 {data_domain} = require '../config.json'
 existsAsync = promisify exists
+execAsync = promisify exec
 
 export class Telegram extends EventEmitter
   constructor: (token, @botName, @chats) ->
@@ -90,7 +92,9 @@ export class Telegram extends EventEmitter
           id = u.message.sticker.file_id
           console.log "[Telegram] Sticker #{id} from #{u.message.from.username}"
           path = await @downloadFile 'stickers', id, 'webp'
-          console.log "[Telegram] Sticker downloaded to #{path}"
-          @emit "img_#{u.message.chat.id}", u.message.from.username, data_domain + path.replace 'data/', ''
+          console.log "[Telegram] Sticker downloaded to #{path}, decoding to PNG"
+          pngPath = path.replace '.webp', '.png'
+          await execAsync "dwebp #{path} -o #{pngPath}"
+          @emit "img_#{u.message.chat.id}", u.message.from.username, data_domain + pngPath.replace 'data/', ''
     if offset? # It might be possible that we got no message
       @offset = offset + 1
