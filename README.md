@@ -5,9 +5,12 @@ Matrix - Telegram bridge bot
 This bridge can relay [Telegram](https://telegram.me) messages to an [Matrix](https://matrix.org) chatroom.
 
 ## Deploy
+Make sure `libwebp`(which provides `dwebp`) is installed.
+
 Execute:
 
 ```bash
+npm install
 cake build # Build the source (CoffeeScript -> JavaScript)
 ```
 
